@@ -10,28 +10,57 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import io
 import os
 from pathlib import Path
 
+import environ
+
+e = environ.Env(
+    DEBUG=(bool, False),
+    SECRET_KEY=(str, "foo"),
+    HOST_IP=(str, "localhost"),
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+env_file = os.path.join(ROOT_DIR, ".env")
 
+LOCAL = os.path.isfile(env_file)
+
+if LOCAL:
+    e.read_env(env_file)
+else:
+    import google.auth
+    from google.cloud import secretmanager
+
+    _, project = google.auth.default()
+
+    if project:
+        client = secretmanager.SecretManagerServiceClient()
+
+        SETTINGS_NAME = os.environ.get("SETTINGS_NAME", "settings")
+        name = f"projects/{project}/secrets/{SETTINGS_NAME}/versions/latest"
+        payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+        e.read_env(io.StringIO(payload))
+
+    GS_BUCKET_NAME = e.str("GS_BUCKET_NAME")
+    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+    STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+    GS_DEFAULT_ACL = "publicRead"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "%i+ah@&1r8f#wyiw^%!q68nr^!*bflghstnki5)t3ka0&!f@o#"
+DEBUG = e("DEBUG")
+HOST_IP = e("HOST_IP")
+SECRET_KEY = e("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 AUTH_USER_MODEL = "ra.User"
-STATICFILES_DIRS = [
-    # "C:/Users/carme/OneDrive/Documents/GitHub/tera/main/ra",
-    "C:/Users/Valued Client/Desktop/tera/main/static",
-]
+
 
 # Application definition
 
@@ -43,9 +72,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "ra",
+    "corsheaders",
 ]
 
+if not LOCAL:
+    INSTALLED_APPS += ["storages"]
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -84,7 +118,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "ra",
         "USER": "root",
-        "Password": "root",
+        "PASSWORD": "",
         "HOST": "127.0.0.1",
         "PORT": "3306",
         "OPTIONS": {
@@ -92,6 +126,9 @@ DATABASES = {
         },
     }
 }
+
+if not LOCAL:
+    DATABASES = {"default": e.db()}
 
 
 # Password validation
@@ -130,9 +167,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = "/static/"
+
+STATICFILES_DIRS = [BASE_DIR / "static/"]
+STATIC_URL = "static/"
 
 MEDIA_URL = "/images/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CORS_ALLOW_ALL_ORIGINS = True

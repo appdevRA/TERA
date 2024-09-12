@@ -64,8 +64,8 @@
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                    <!-- <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" /> -->
+                    <!-- <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button> -->
                 </div>
             </form>
             <!-- Navbar-->
@@ -573,12 +573,11 @@ document.getElementById("add").onclick = function(e) {
                 else{
                                 tableData = response.createdObject
                                 document.getElementById("dismissModaladd").click()
-                                if(tableData[0])
                 
                                 var row = table.row.add( [
                 
                                             tableData[0].title, tableData[0].author,tableData[0].department_name, ' <a href= "'+tableData[0].file+'"  > file</a>', tableData[0].num_of_access ,
-                                            '<input class="input-switch" type="checkbox" id="toggle"  checked/> <label class="label-switch" for="toggle"></label><span class="info-text"></span>', 
+                                            '<input class="input-switch" type="checkbox" id="switch'+ tableData[0].id+'"  checked/> <label class="label-switch" for="switch'+ tableData[0].id+'"></label><span class="info-text"></span>', 
                                                 '<a id="'+ tableData[0].id+'" class="edit" title="Edit"  data-toggle="modal" data-target="#editModal" ><i class="far fa-edit" style="color: #ffd700; cursor: pointer;"></i></a> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <a id="'+ tableData[0].id+'" class="deletes" title="" data-toggle="tooltip"><i class="fa fa-trash" style="color: #800000; cursor: pointer;"></i></a>',
                 
                                         ] )

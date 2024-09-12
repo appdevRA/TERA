@@ -10,11 +10,8 @@ import requests
 from requests import ReadTimeout, ConnectTimeout, HTTPError, Timeout, ConnectionError
 import random
 import time
-from django.http import HttpResponse
 import json
 from fake_useragent import UserAgent
-from requests_html import HTMLSession
-from threading import Thread
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
@@ -36,7 +33,7 @@ def modes(allBookmarks,userID):
 
     maxCount= ownedBookmarks["count"].max()
     mode = ownedBookmarks[ownedBookmarks["count"] == maxCount]
-    print(allBookmarksdf)
+    # print(allBookmarksdf)
 
     if len(notOwnedBookmarks.index) == 0:
         print("empty not owned bookmarks")
@@ -66,16 +63,16 @@ def modes(allBookmarks,userID):
             if average >= highest:
                 highest = average
                 indexOfHighest_cosinesim = i
-                print(indexOfHighest_cosinesim)
+                # print(indexOfHighest_cosinesim)
 
 
         # for i, item in enumerate(modes['bookmark__title']):
         title = mode.iloc[indexOfHighest_cosinesim]
 
-        print("to find recommendation: (multiple  mode)", type(title["title"]),title["title"])
+        # print("to find recommendation: (multiple  mode)", type(title["title"]),title["title"])
     else:
         title = mode
-        print("to find recommendation: (single mode)", title["title"])
+        # print("to find recommendation: (single mode)", title["title"])
 
 
     # a = allBookmarksdf 
@@ -97,7 +94,7 @@ def recommend(metadata, title):
 
     # metadata = bookmarkFrame 
     # print(bookmarkFrame)
-    print(metadata)
+    # print(metadata)
     tfidf = TfidfVectorizer(stop_words='english')
 
     tfidf_matrix = tfidf.fit_transform(metadata['title'])
@@ -131,7 +128,7 @@ def recommend(metadata, title):
     # Get the movie indices
     # print("dataframe",dataframe)
 
-    print("cleanScores:", cleanScores)
+    # print("cleanScores:", cleanScores)
     movie_indices = [i[0] for i in cleanScores]
     meta = metadata.iloc[movie_indices]
     # print("metadata:", metadata)

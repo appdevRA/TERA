@@ -48,8 +48,8 @@
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                    <!-- <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" /> -->
+                    <!-- <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button> -->
                 </div>
             </form>
             <!-- Navbar-->
@@ -274,25 +274,17 @@
                                             <th>Title</th>
                                             <th>Authors</th>
                                             <th>College</th>
-                                            <th>Status</th>
-                                            <th colspan="2">Manage</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Authors</th>
-                                            <th>College</th>
                                             <th>Visibility</th>
                                             <th > Total number of user access</th>
                                         </tr>
-                                    </tfoot>
+                                    </thead>
+                                    
                                     <tbody>
                                         {% for d in dissertations %}
                                         <tr id ="{{d.author}}">
                                             <td>{{d.title}}</td>
                                             <td>{{d.author}}</td>
-                                            <td>{{d.department__name}}</td>
+                                            <td>{{d.department_name}}</td>
                                             <td> {{d.is_active}}</td>
                                             <td> {{d.num_of_access}}</td>
 

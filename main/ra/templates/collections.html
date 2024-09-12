@@ -547,7 +547,7 @@ function get_bookmarks(tab_name, folder_id, isGet){
 
                                         }
                                       }
-                                       
+                                       console.log(members)
                                         for(i=0;i<members.length;i++){
                                             $('#group_detail_ul').append(
                                                       "<div class='member' style='margin-left:25%'> "+ members[i].first_name+" "+ members[i].last_name +" </div>"  
@@ -577,7 +577,6 @@ function showRows(rowType, markers, folder_id, isRefresh){
       $("#itemArea").empty();
     }
     
-
     if(rowType == 'all'){
       $("#group_detail_ul").empty();
       // document.getElementById(rowType).style.backgroundColor= "#c9c9c9";
@@ -1286,17 +1285,24 @@ $(document).on("click", "#add_member", function(){
 
               success: function(response){
                 result = response.result
-                member = response.member
-               
+                
                 if(result == 'member'){
+                  document.getElementById('error_message').style.display = "inline"
                   document.getElementById('error_message').innerHTML ="User is already a member"
 
                 }
-                else if(result == 'owner')
+                else if(result == 'owner'){
+                   document.getElementById('error_message').style.display = "inline"
                   document.getElementById('error_message').innerHTML ="User is the owner"
-                else if(result == 'not exist')
+                }
+                 
+                else if(result == 'not exist'){
+                  document.getElementById('error_message').style.display = "inline"
                   document.getElementById('error_message').innerHTML ="User does not exist"
+                  
+                }
                 else if(result == 'added'){
+                  member = response.member
                   document.getElementById('dismiss-modal_member').click()
                   alert("User Added")
 
@@ -1309,7 +1315,7 @@ $(document).on("click", "#add_member", function(){
                 
               },
               error: function(){
-                document.getElementById('error_message').innerHTML =""
+                document.getElementById('error_message').innerHTML ="something went wrong"
 
               }
         }); 

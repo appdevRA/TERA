@@ -168,6 +168,7 @@
             <ul>
                <input type="radio" id="CIT" name="fav_language" value="CiT"  onclick="search(this.id, 'site')">
                <label for="CIT">CIT-U materials</label><br>
+              {% if is_authenticated == 'True' %}
               {% for site in sites %}
 
               {% if site.name == "Springeropen" %}
@@ -191,9 +192,32 @@
               {% endif %}
 
               {% endfor%}
-             
+              {% endif %}
 
-              
+              {% if is_authenticated == 'False' %}
+              {% for site in sites %}
+              {% if site.name == "Springeropen" %}
+                  <input type="radio" id="Springeropen" name="fav_language" value="Springeropen" >
+                  <label for="Springeropen" href='#modalLogoutForm' data-toggle='modal' data-target='#modalLogoutForm'>Springeropen </label><br>
+              {% endif %}
+
+              {% if site.name == "UNESCO Digital Library"  %}
+                  <input type="radio" id="UNESCO_Digital_Library" name="fav_language" value="UNESCO" style="margin-left: %">
+                  <label for="UNESCO_Digital_Library" href='#modalLogoutForm' data-toggle='modal' data-target='#modalLogoutForm'>UNESCO</label><br>
+              {% endif %}
+
+              {% if site.name == "Open Textbook Library" %}
+                  <input type="radio" id="Open_Textbook_Library" name="fav_language" value="Open Textbook Library" style="margin-left: ">
+                  <label for="Open_Textbook_Library" href='#modalLogoutForm' data-toggle='modal' data-target='#modalLogoutForm'>Open Textbook Library</label><br>
+              {% endif %}
+
+              {% if site.name == "OER Commons" %}
+                  <input type="radio" id="OER_Commons" name="fav_language" value="OER Commons" >
+                  <label for="OER_Commons" href='#modalLogoutForm' data-toggle='modal' data-target='#modalLogoutForm'>OER Commons</label><br>
+              {% endif %}
+
+              {% endfor%}
+              {% endif %}
 
               
 
@@ -354,10 +378,9 @@
         <div class="md-form mb-5">
       
          <center> 
-         <form action = "" method = "POST" autocomplete = "off" enctype="multipart/form-data">
-          {% csrf_token %}
+         
             <h4 style="color: #800000">PLEASE LOG IN</h4> <br><br>
-            Bookmark feature requires an account<br>
+            This feature requires an account<br>
             <b>do you want to log in?</b><br><br><br><br>
        
    
@@ -368,11 +391,10 @@
                 </div>
                 <input value="search_result_view" name="previousPage" hidden>
                 <div class="form-group col-md-6"> 
-                    <button type="submit" name="buttonLogin"class="buttonlogout"> Login</button>
+                  <a href="{% url 'ra:tera_login_view' %}">  <button type="" name="buttonLogin"class="buttonlogout"> Login</button></a>
                 </div> 
          </div>
       </center>
-       </form>
       </center>
     </div></div>
       </div>
@@ -674,7 +696,7 @@ $(document).on("click", ".open", function(){
             data:{
               action: 'increment_access',
               id: id,
-              csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+              csrfmiddlewaretoken:"{{csrf_token}}"
             },
             success: function(response){
             }
@@ -705,7 +727,7 @@ $(document).on("click", ".bookmark", function(){
                 website: website,
                 bookmark: id,
                 word: keyword,
-                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                csrfmiddlewaretoken:"{{csrf_token}}"
               }, error: function(response){
                   alert("Something went, item cannot be bookmarked")
            

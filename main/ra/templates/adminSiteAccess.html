@@ -39,8 +39,8 @@
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                    <!-- <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" /> -->
+                    <!-- <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button> -->
                 </div>
             </form>
             <!-- Navbar-->
@@ -138,10 +138,7 @@
                                 <i class="fas fa-table me-1"></i>
                                 Site Access
                                 <center>
-                                    <select id="filter">
-                                        <option selected="selected" value="date">Days</option>
-                                        <option value="month">Months</option>
-                                    </select>
+                                    
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     <label for="startDate"> Start date</label> 
                                     <input type="date" id="startDate" placeholder="Start Date"  />
@@ -215,7 +212,6 @@
 <script type="text/javascript">
     
 var data = {{ data |safe }}
- filter = "date"
  months= ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
  chartLabels = [] 
  yData = []
@@ -240,13 +236,6 @@ var data = {{ data |safe }}
         
   });
 
-  document.getElementById("filter").onchange = function() {
-        document.getElementById("startDate").type = document.getElementById("filter").value
-        document.getElementById("endDate").type = document.getElementById("filter").value
-        filter = document.getElementById("filter").value
-
-  }
-
 
   document.getElementById("startDate").onchange = function() {
         minDate = new Date(this.value)
@@ -254,11 +243,9 @@ var data = {{ data |safe }}
         document.getElementById("endDate").setAttribute("min", getDateValue(minDate));
 
         
-        if(filter == "date"){
             maxDate = new Date(this.value)
             maxDate.setDate(new Date(this.value).getDate() + 30)
             document.getElementById("endDate").setAttribute("max", getDateValue(maxDate));
-    }
         
 
     
@@ -288,7 +275,6 @@ document.getElementById("submit").onclick = function(e) {
 
 function getDateValue(d){
     // d = new Date(new Date(date).getFullYear(), new Date(date).getMonth() + 1, 0)
-    if(filter == "date"){
         if(d.getMonth()+1 < 10 & d.getDate() < 10)
             return(d.getFullYear()+"-0"+ (d.getMonth()+1)+"-0"+ d.getDate())
         else if(d.getMonth()+1 < 10)
@@ -298,7 +284,6 @@ function getDateValue(d){
         else
             return(d.getFullYear()+"-"+ (d.getMonth()+1)+"-"+ d.getDate())
 
-    }else{
             if(d.getMonth()+1 < 10 )
             return(d.getFullYear()+"-0"+ (d.getMonth()+1))
         else if(d.getMonth()+1 < 10)
@@ -307,7 +292,6 @@ function getDateValue(d){
             return(d.getFullYear()+"-"+ (d.getMonth()+1))
         else
             return(d.getFullYear()+"-"+ (d.getMonth()+1))
-    }
 }
 
 
@@ -318,7 +302,6 @@ function setLabel(startDate, endDate){
     chartLabels.splice(0,chartLabels.length)
     yData.splice(0,yData.length)
 
-    if(filter == "date"){
         i=0
         while( startss <= ends){
             chartLabels.push(months[startss.getMonth()] +" "+ startss.getDate())
@@ -338,26 +321,7 @@ function setLabel(startDate, endDate){
         }
 
        
-    } else if(filter == "month"){
-        while( startss <= ends){
-            chartLabels.push(months[startss.getMonth()] +" "+ startss.getFullYear())
-
-            try{
-                if(data[i].day == getDateValue(startss)){
-                    
-                    yData.push(data[i].count)
-                    i++
-                } else
-                    yData.push(0)
-
-            } catch{
-                yData.push(0)
-            }
-            
-            startss.setMonth(startss.getMonth()+1)
-        }
-           
-    }
+   
     chart.data.datasets[0].data = yData
     chart.data.labels = chartLabels
     chart.update();

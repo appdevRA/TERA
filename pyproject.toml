@@ -11,6 +11,16 @@ djangorestframework = "^3.12.4"
 beautifulsoup4 = "^4.10.0"
 requests = "^2.26.0"
 mysqlclient = "^2.1.0"
+gunicorn = "^20.1.0"
+google-cloud-secret-manager = "^2.8.0"
+django-storages = {version = "^1.12.3", extras = ["google"]}
+django-environ = "^0.8.1"
+django-cors-headers = "^3.11.0"
+Pillow = "^9.0.1"
+pandas = "^1.4.0"
+fake-useragent = "^0.1.11"
+requests-html = "^0.10.0"
+scikit-learn = "^1.0.2"
 
 [tool.poetry.dev-dependencies]
 black = "^21.11b1"
